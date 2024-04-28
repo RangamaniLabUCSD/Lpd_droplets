@@ -1,0 +1,84 @@
+export all *
+ {
+   append = 1
+   binary = 0
+ }
+
+set simul system
+{
+    dim = 3
+    time_step = 0.02
+    viscosity = 0.5
+    display = (back_color=black)
+    steric = 1, 1
+}
+
+set space cell
+{
+    shape = sphere
+}
+
+new cell
+{
+    radius =0.1
+}
+
+set fiber filament
+{
+    rigidity = 0.075
+    segmentation = 0.1
+    confine = inside, 200, cell
+    display = ( line=10, 1; color=0x5CBA47FF; )
+    activity =grow
+    growing_speed = 0.001288, 0
+    shrinking_speed = 0
+    growing_force = 10.0
+    max_length =0.7853981633974483
+    steric = 1, 0.0035
+    binding_key = 1
+}
+
+set hand binder
+{
+    %Rate and distance
+    activity = dimerizer
+    binding = 10.0, 0.5
+    %rate and force
+    unbinding = 10.0, 10.0
+    display = ( size=100; color=yellow, orange; )
+    binding_key = 2
+}
+
+set single graftedcrosslinker
+{
+    hand = binder
+    stiffness = 0.1
+    %diffusion = 10
+    %fast_diffusion = 1
+    diffusion = 10.0
+    %fast_diffusion = 1
+}
+
+
+set solid blob
+{
+    confine = inside, 100
+    display = ( style=7; coloring=0; color=0xE6222880; )
+    steric = 1
+}
+
+% radius 30 nm with 4 spots, each 1 crosslinker
+new 10 blob
+{
+    %separation < 2R
+    separation = 0.054
+    deviation = 0.001
+    %radius
+    sphere1 = 0 0 0, 0.03, 1 graftedcrosslinker
+}
+
+run 100 system 
+{
+    nb_frames = 10
+    binary = 0
+}
